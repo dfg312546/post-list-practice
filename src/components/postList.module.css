@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.postListUl {
+  min-height: 100vh;
+  background-color: rgba(99, 164, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.postListLi {
+  width: 600px;
+  background-color: white;
+  list-style: none;
+  border: 2px solid #1976D2;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.postListTitle {
+  color:	#003D79;
+  margin: 10px 0px 10px 30px;
+}
+
+.postListContent {
+  font-size: 1rem;
+  margin: 10px 50px;
+}
+
+.postListFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.postListTime {
+  display: flex;
+  justify-content: start;
+  margin: 10px 0px 10px 30px;
+}
+
+.postListFooterBtnSection {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.postListEditBtn {
+  margin: 5px
+}
+.postListEditBtn:hover {
+  cursor: pointer;
+}
+
+.postListDeleteBtn {
+  margin: 5px
+}
+.postListDeleteBtn:hover {
+  cursor: pointer;
+  color: red;
+}
