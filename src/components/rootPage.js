@@ -22,7 +22,7 @@ export const MainNavigation = () => {
     margin: '5px',
   }
   const navStyle = {
-    backgroundColor: 'rgba(99, 164, 255, 0.2)',
+    // backgroundColor: 'rgba(99, 164, 255, 0.2)',
     display: 'flex',
     justifyContent: 'center',
     padding: '10px',

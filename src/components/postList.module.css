@@ -5,7 +5,7 @@
 
 .postListUl {
   min-height: 100vh;
-  background-color: rgba(99, 164, 255, 0.2);
+  /* background-color: rgba(99, 164, 255, 0.2); */
   display: flex;
   flex-direction: column;
   align-items: center;

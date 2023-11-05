@@ -1,7 +1,7 @@
 import { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
-import { Button,TextField,Backdrop,Alert } from '@mui/material';
+import { Button,TextField,Backdrop,Alert,CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,7 +18,7 @@ function NewPost () {
     date: dayjs(),
   });
   const navigate = useNavigate();
-  const { mutate,isSuccess } = useMutation({
+  const { mutate,isSuccess,isLoading } = useMutation({
     mutationFn: sendNewPost,
     onSuccess: () => { 
       setTimeout(() => navigate('/postList'),1000); 
@@ -95,11 +95,16 @@ function NewPost () {
       console.error('Error posting data:', error);
     }
   }
-  
-
 
   return (
     <>
+    { isLoading &&     
+    <Backdrop
+      sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={true}
+    >
+      <CircularProgress />
+    </Backdrop>}
     {isSuccess &&  
     <Backdrop
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -184,10 +189,10 @@ function NewPost () {
 export default NewPost;
 
 export const sendNewPost = async ({ newPost }) => {
-  const response = await fetch('http://localhost:3001/posts',{
+  const response = await fetch('http://localhost:5000/api/posts',{
     method: 'POST',
     headers: {
-      'content-type':'application/json',
+      'content-type':'application/json',//讓後端接收JSON數據並parsing
     },
     body: JSON.stringify({
       title: newPost.title,

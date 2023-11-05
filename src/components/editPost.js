@@ -1,7 +1,7 @@
 import { useState,useContext,useEffect } from 'react';
 import { useNavigate,useParams } from 'react-router-dom';
 import { useMutation,useQuery } from 'react-query';
-import { Button,TextField,Backdrop,Alert } from '@mui/material';
+import { Button,TextField,Backdrop,Alert,CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,7 +12,7 @@ import { Context } from '../context/context';
 function EditPost() {
   const Ctx = useContext(Context);
   const { id } = useParams();
-  const result = useQuery(['post-id',id], () => fetchPosts(id));
+  const result = useQuery(['post-id',id], () => fetchPost(id));
   const [inputValues, setInputValues] = useState({
     title: '',
     description: '',
@@ -22,8 +22,8 @@ function EditPost() {
   useEffect(() => {
     if (result.isSuccess) {
       setInputValues({
-        title: result.data[0],
-        description: result.data[1],
+        title: result.data[0].title,
+        description: result.data[0].description,
         date: dayjs(),
       });
     }
@@ -32,7 +32,7 @@ function EditPost() {
 
 
   const navigate = useNavigate();
-  const { mutate,isSuccess } = useMutation({
+  const { mutate,isSuccess,isLoading } = useMutation({
     mutationFn: editPost,
     onSuccess: () => { 
       setTimeout(() => navigate('/postList'),1000);
@@ -107,6 +107,22 @@ function EditPost() {
 
   return (
     <>
+    { result.isLoading && 
+      <Backdrop
+      sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={true}
+      >
+        <CircularProgress />
+      </Backdrop> }
+
+      { isLoading && 
+      <Backdrop
+      sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={true}
+      >
+        <CircularProgress />
+      </Backdrop> }
+
     {isSuccess &&  
     <Backdrop
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -193,8 +209,8 @@ function EditPost() {
 
 export default EditPost;
 
-const fetchPosts = async (id) => {
-  const response = await fetch(`http://localhost:3001/posts/${id}`);
+const fetchPost = async (id) => {
+  const response = await fetch(`http://localhost:5000/api/posts/${id}`);
 
   if (!response.ok) {
     throw new Error('Failed to fetch data')
@@ -207,8 +223,8 @@ const fetchPosts = async (id) => {
 }
 
 const editPost = async ({ id,updatedData }) => {
-  const response = await fetch(`http://localhost:3001/posts/${id}`,{
-    method: 'PUT',
+  const response = await fetch(`http://localhost:5000/api/posts/${id}`,{
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json', // 根据服务器要求设置正确的内容类型
     },
