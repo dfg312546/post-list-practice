@@ -1,1 +1,1 @@
-用React及相關庫搭配JSON Server練習基本的CRUD操作，完成一個可供個人使用的記事應用。
+用React及相關庫搭配MongoDB練習基本的CRUD操作，完成一個可供個人使用的MERN記事應用。
