@@ -76,7 +76,7 @@ export default PostList;
 
 
 const fetchPosts = async () => {
-  const response = await fetch('http://localhost:5000/api/posts');
+  const response = await fetch('https://post-list-backend.vercel.app/api/posts');
 
   if (!response.ok) {
     throw new Error('Failed to fetch data')
@@ -89,7 +89,7 @@ const fetchPosts = async () => {
 }
 
 const deletePost = async (id) => {
-  const response = await fetch(`http://localhost:5000/api/posts/${id}`,{
+  const response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`,{
     method: 'DELETE'
   });
 

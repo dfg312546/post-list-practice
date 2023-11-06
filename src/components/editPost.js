@@ -210,7 +210,7 @@ function EditPost() {
 export default EditPost;
 
 const fetchPost = async (id) => {
-  const response = await fetch(`http://localhost:5000/api/posts/${id}`);
+  const response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`);
 
   if (!response.ok) {
     throw new Error('Failed to fetch data')
@@ -223,7 +223,7 @@ const fetchPost = async (id) => {
 }
 
 const editPost = async ({ id,updatedData }) => {
-  const response = await fetch(`http://localhost:5000/api/posts/${id}`,{
+  const response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`,{
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json', // 根据服务器要求设置正确的内容类型

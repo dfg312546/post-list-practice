@@ -189,7 +189,7 @@ function NewPost () {
 export default NewPost;
 
 export const sendNewPost = async ({ newPost }) => {
-  const response = await fetch('http://localhost:5000/api/posts',{
+  const response = await fetch('https://post-list-backend.vercel.app/api/posts',{
     method: 'POST',
     headers: {
       'content-type':'application/json',//讓後端接收JSON數據並parsing
