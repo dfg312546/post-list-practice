@@ -1,4 +1,4 @@
-import { useContext,useEffect } from "react";
+import { useContext,useEffect,useState } from "react";
 import { useQuery,useQueryClient } from "react-query";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "../context/context";
@@ -11,6 +11,7 @@ import style from './postList.module.css'
 
 function PostList() {
   const Ctx = useContext(Context);
+  const [isDeleting, setIsDeleting] = useState(false);
   const result = useQuery(['queryKey-post'], fetchPosts);
   const queryClient = useQueryClient();
   queryClient.invalidateQueries(['queryKey-post']);//讓組件每次渲染時，都重新query['queryKey-post']
@@ -31,6 +32,21 @@ function PostList() {
     }
   }, [result.data, result.status]);
 
+  const deletePost = async (id) => {
+    setIsDeleting(true);
+    let response;
+    try {
+      response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`, {
+        method: 'DELETE'
+      });
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  
+    return response
+  }
   
 
   const handleEdit = (id) => {
@@ -39,6 +55,13 @@ function PostList() {
 
   return (
     <>
+      { isDeleting && 
+        <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}
+        >
+          <CircularProgress />
+        </Backdrop> }
       { result.isLoading ? 
         <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -88,10 +111,3 @@ const fetchPosts = async () => {
   return  dataArray;
 }
 
-const deletePost = async (id) => {
-  const response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`,{
-    method: 'DELETE'
-  });
-
-  return response
-}
