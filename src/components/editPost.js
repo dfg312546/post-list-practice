@@ -11,6 +11,7 @@ import { Context } from '../context/context';
 
 function EditPost() {
   const Ctx = useContext(Context);
+  const navigate = useNavigate();
   const { id } = useParams();
   const result = useQuery(['post-id',id], () => fetchPost(id));
   const [inputValues, setInputValues] = useState({
@@ -30,8 +31,26 @@ function EditPost() {
   }, [result.data, result.status,id]);
 
 
+  const editPost = async ({ id,updatedData }) => {
+    const response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`,{
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json', //讓後端接收JSON數據並parsing
+        'Authorization': `Bearer ${Ctx.token}`,
+      },
+      body: JSON.stringify({
+        title: updatedData.title,
+        description: updatedData.description,
+        date: updatedData.date,
+        id: id,
+      }),
+    });
+  
+    console.log(id,updatedData)
+  
+    return response.json();
+  }
 
-  const navigate = useNavigate();
   const { mutate,isSuccess,isLoading } = useMutation({
     mutationFn: editPost,
     onSuccess: () => { 
@@ -220,23 +239,4 @@ const fetchPost = async (id) => {
 
   const dataArray = Object.keys(data).map((key) => data[key]);
   return  dataArray;
-}
-
-const editPost = async ({ id,updatedData }) => {
-  const response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`,{
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json', // 根据服务器要求设置正确的内容类型
-    },
-    body: JSON.stringify({
-      title: updatedData.title,
-      description: updatedData.description,
-      date: updatedData.date,
-      id: id,
-    }),
-  });
-
-  console.log(id,updatedData)
-
-  return response.json();
 }

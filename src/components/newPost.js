@@ -1,4 +1,5 @@
 import { useState,useContext } from 'react';
+import { Context } from '../context/context';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { Button,TextField,Backdrop,Alert,CircularProgress } from '@mui/material';
@@ -7,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import style from './newPost.module.css'
-import { Context } from '../context/context';
+
 
 
 function NewPost () {
@@ -18,12 +19,38 @@ function NewPost () {
     date: dayjs(),
   });
   const navigate = useNavigate();
+
+  const sendNewPost = async ({ newPost }) => {
+    const response = await fetch('https://post-list-backend.vercel.app/api/posts',{
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',//讓後端接收JSON數據並parsing
+        'Authorization': `Bearer ${Ctx.token}`,
+      },
+      body: JSON.stringify({
+        title: newPost.title,
+        description: newPost.description,
+        date: newPost.date,
+        name: Ctx.user,
+        creator: Ctx.userId
+      })
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to post data')
+    };
+  
+    return response.json();
+  };
+
   const { mutate,isSuccess,isLoading } = useMutation({
     mutationFn: sendNewPost,
     onSuccess: () => { 
       setTimeout(() => navigate('/postList'),1000); 
     }//接受回調成功發送以後執行操作
-  })
+  });
+
+
 
   const [inputErrors, setInputErrors] = useState({
     title: false,
@@ -187,23 +214,3 @@ function NewPost () {
 }
 
 export default NewPost;
-
-export const sendNewPost = async ({ newPost }) => {
-  const response = await fetch('https://post-list-backend.vercel.app/api/posts',{
-    method: 'POST',
-    headers: {
-      'content-type':'application/json',//讓後端接收JSON數據並parsing
-    },
-    body: JSON.stringify({
-      title: newPost.title,
-      description: newPost.description,
-      date: newPost.date,
-    })
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to post data')
-  };
-
-  return response.json();
-};

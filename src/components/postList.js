@@ -23,6 +23,7 @@ function PostList() {
       console.log(result.data)
       const formattedData = result.data[0].map((item) => ({
         ...item,
+        name: item.name,
         title: item.title,
         description: item.description,
         date: dayjs(item.date) // 將日期字符串轉換為 dayjs 對象
@@ -37,7 +38,10 @@ function PostList() {
     let response;
     try {
       response = await fetch(`https://post-list-backend.vercel.app/api/posts/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${Ctx.token}`,
+        },
       });
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -80,6 +84,9 @@ function PostList() {
             <footer className={style.postListFooter}>
               <span className={style.postListTime}>
                 Time: {item.date.format('YY-MM-DD HH:mm:ss')}
+              </span>
+              <span className={style.postListTime}>
+                Created by: {item.name}
               </span>
               <div className={style.postListFooterBtnSection}>
                 <CreateOutlinedIcon className={style.postListEditBtn} onClick={() => handleEdit(item.id)}/>

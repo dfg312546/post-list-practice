@@ -1,5 +1,8 @@
+import { useState,useContext } from 'react';
+import { Context } from '../context/context';
 import { Outlet,Link } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import style from './rootPage.module.css'
 
 function RootPage () {
   return (
@@ -15,22 +18,18 @@ function RootPage () {
 export default RootPage;
 
 export const MainNavigation = () => {
-  const linkStyle = {
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    color: '#1976D2',
-    margin: '5px',
-  }
-  const navStyle = {
-    // backgroundColor: 'rgba(99, 164, 255, 0.2)',
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '10px',
-  }
+  const Ctx = useContext(Context);
   return (
-    <Breadcrumbs style={navStyle}>
-      <Link style={linkStyle} to='/'>Home</Link>
-      <Link style={linkStyle} to='/postList'>Post List</Link>
+    <nav className={style.navContainer}>
+    <Breadcrumbs className={style.navStyle}>
+      <Link className={style.linkStyle} to='/'>Home</Link>
+      <Link className={style.linkStyle} to='/postList'>Post List</Link>
     </Breadcrumbs>
+    <span className={style.logInStyle}>
+      {Ctx.user ? `Hello! ${Ctx.user}` : <Link to='/logIn'>Log in</Link>}
+    </span>
+    
+    </nav>
+
   )
 }
