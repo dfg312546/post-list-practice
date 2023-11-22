@@ -49,6 +49,12 @@ button.formSubmitBtn {
   margin-right: 10px;
 }
 
+.signUpButtonText {
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+}
+
 .signUpWithGoogleButton {
   color: white;
   background-color: #1976D2;

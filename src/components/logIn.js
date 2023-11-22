@@ -20,8 +20,8 @@ function Login () {
   });
   const navigate = useNavigate();
   const { data,mutate,isSuccess,isLoading,error } = useMutation({
-    mutationFn: logIn,
-    onSuccess: () => { 
+    mutationFn: logInMutationFn,
+    onSuccess: () => {       
       setTimeout(() => navigate('/postList'),1000); 
     },//接受回調成功發送以後執行操作
     onError: () => {
@@ -85,8 +85,9 @@ function Login () {
       Ctx.setToken(data.token)
       Ctx.setUser(data.name)
       Ctx.setUserId(data.userId)
+      localStorage.setItem('userData',JSON.stringify({ userId: data.userId,token: data.token,name: data.name }))
     }
-  }, [isSuccess]);
+  },[isSuccess])
 
   return (
     <>
@@ -170,12 +171,12 @@ function Login () {
             type='button' 
             variant="contained"
             >
-              <Link to='/signUp'>
+              <Link to='/signUp' className={style.signUpButtonText}>
                 Sign Up
               </Link>
             </Button>
             <span>or</span>
-            <button className={style.signUpWithGoogleButton}>Log in with<GoogleIcon style={{marginLeft:'5px'}}/></button>
+            <button type='button' className={style.signUpWithGoogleButton}>Log in with<GoogleIcon style={{marginLeft:'5px'}}/></button>
           </div>
 
         </section>
@@ -187,7 +188,7 @@ function Login () {
 
 export default Login
 
-export const logIn = async ({ logInData }) => {
+export const logInMutationFn = async ({ logInData }) => {
   const response = await fetch('https://post-list-backend.vercel.app/api/users/login',{
     method: 'POST',
     headers: {
